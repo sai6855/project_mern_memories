@@ -1,52 +1,65 @@
-import { FETCH_ALL, CREATE, UPDATE, DELETE, LIKE } from '../constants/actionTypes';
+import * as api from "../api/index.js";
 
-import * as api from '../api/index.js';
-
-export const getPosts = () => async (dispatch) => {
+export const getPosts = () => async (_, setState) => {
   try {
     const { data } = await api.fetchPosts();
 
-    dispatch({ type: FETCH_ALL, payload: data });
+    setState(() => data, ["posts"]);
   } catch (error) {
     console.log(error.message);
   }
 };
 
-export const createPost = (post) => async (dispatch) => {
+export const createPost = (post) => async (dispatch, setState) => {
   try {
     const { data } = await api.createPost(post);
-
-    dispatch({ type: CREATE, payload: data });
+    setState(
+      (store, posts) => {
+        return [...posts, data];
+      },
+      ["posts"]
+    );
   } catch (error) {
     console.log(error.message);
   }
 };
 
-export const updatePost = (id, post) => async (dispatch) => {
+export const updatePost = (id, post) => async (dispatch, setState) => {
   try {
     const { data } = await api.updatePost(id, post);
 
-    dispatch({ type: UPDATE, payload: data });
+    setState(
+      (_, posts) => posts.map((post) => (post._id === id ? data : post)),
+      ["posts"]
+    );
   } catch (error) {
     console.log(error.message);
   }
 };
 
-export const likePost = (id) => async (dispatch) => {
+export const likePost = (id) => async (dispatch, setState) => {
   try {
     const { data } = await api.likePost(id);
 
-    dispatch({ type: LIKE, payload: data });
+    setState(
+      (store, posts) => posts.map((post) => (post._id === id ? data : post)),
+      ["posts"]
+    );
   } catch (error) {
     console.log(error.message);
   }
 };
 
-export const deletePost = (id) => async (dispatch) => {
+export const deletePost = (id) => async (dispatch, setState) => {
   try {
     await api.deletePost(id);
 
-    dispatch({ type: DELETE, payload: id });
+    setState(
+      (store, posts) => {
+        return posts.filter((post) => post._id !== id);
+      },
+      ["posts"]
+    );
   } catch (error) {
     console.log(error.message);
   }
