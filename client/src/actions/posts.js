@@ -1,6 +1,6 @@
 import * as api from "../api/index.js";
 
-export const getPosts = () => async (_, setState) => {
+export const getPosts = () => async (setState) => {
   try {
     const { data } = await api.fetchPosts();
 
@@ -10,11 +10,11 @@ export const getPosts = () => async (_, setState) => {
   }
 };
 
-export const createPost = (post) => async (dispatch, setState) => {
+export const createPost = (post) => async (setState) => {
   try {
     const { data } = await api.createPost(post);
     setState(
-      (store, posts) => {
+      (posts) => {
         return [...posts, data];
       },
       ["posts"]
@@ -24,12 +24,13 @@ export const createPost = (post) => async (dispatch, setState) => {
   }
 };
 
-export const updatePost = (id, post) => async (dispatch, setState) => {
+export const updatePost = (id, post) => async (setState) => {
   try {
     const { data } = await api.updatePost(id, post);
 
     setState(
-      (_, posts) => posts.map((post) => (post._id === id ? data : post)),
+      (posts) =>
+        posts.map((post) => (post._id === id ? { ...data, ...post } : post)),
       ["posts"]
     );
   } catch (error) {
@@ -37,25 +38,24 @@ export const updatePost = (id, post) => async (dispatch, setState) => {
   }
 };
 
-export const likePost = (id) => async (dispatch, setState) => {
+export const likePost = (id) => async (setState) => {
   try {
     const { data } = await api.likePost(id);
 
-    setState(
-      (store, posts) => posts.map((post) => (post._id === id ? data : post)),
-      ["posts"]
-    );
+    setState((posts) => posts.map((post) => (post._id === id ? data : post)), [
+      "posts",
+    ]);
   } catch (error) {
     console.log(error.message);
   }
 };
 
-export const deletePost = (id) => async (dispatch, setState) => {
+export const deletePost = (id) => async (setState) => {
   try {
     await api.deletePost(id);
 
     setState(
-      (store, posts) => {
+      (posts) => {
         return posts.filter((post) => post._id !== id);
       },
       ["posts"]

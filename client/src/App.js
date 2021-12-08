@@ -12,7 +12,7 @@ const App = () => {
   const currentId = useSelector(["currentId"]);
   const store = useSelector();
   console.log({ store });
-  const setCurrentId = (id) => setState(() => id, ["currentId"]);
+  const setCurrentId = (id) => setState(id, ["currentId"]);
   const classes = useStyles();
 
   useEffect(() => {
