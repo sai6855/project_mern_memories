@@ -12,7 +12,7 @@ const state = {
 };
 
 ReactDOM.render(
-  <StoreProvider defaultStore={state}>
+  <StoreProvider store={state}>
     <App />
   </StoreProvider>,
   document.getElementById("root")
