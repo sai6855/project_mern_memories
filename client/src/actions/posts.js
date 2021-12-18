@@ -4,7 +4,7 @@ export const getPosts = () => async (setState) => {
   try {
     const { data } = await api.fetchPosts();
 
-    setState(() => data, ["posts"]);
+    setState(() => data, "posts");
   } catch (error) {
     console.log(error.message);
   }
@@ -13,25 +13,22 @@ export const getPosts = () => async (setState) => {
 export const createPost = (post) => async (setState) => {
   try {
     const { data } = await api.createPost(post);
-    setState(
-      (posts) => {
-        return [...posts, data];
-      },
-      ["posts"]
-    );
+    setState((posts) => {
+      return [...posts, data];
+    }, "posts");
   } catch (error) {
     console.log(error.message);
   }
 };
 
-export const updatePost = (id, post) => async (setState) => {
+export const updatePost = (id, newpost) => async (setState) => {
   try {
-    const { data } = await api.updatePost(id, post);
+    const { data } = await api.updatePost(id, newpost);
 
     setState(
       (posts) =>
-        posts.map((post) => (post._id === id ? { ...data, ...post } : post)),
-      ["posts"]
+        posts.map((post) => (post._id === id ? { ...data, ...newpost } : post)),
+      "posts"
     );
   } catch (error) {
     console.log(error.message);
@@ -42,9 +39,10 @@ export const likePost = (id) => async (setState) => {
   try {
     const { data } = await api.likePost(id);
 
-    setState((posts) => posts.map((post) => (post._id === id ? data : post)), [
-      "posts",
-    ]);
+    setState(
+      (posts) => posts.map((post) => (post._id === id ? data : post)),
+      "posts"
+    );
   } catch (error) {
     console.log(error.message);
   }
@@ -54,12 +52,9 @@ export const deletePost = (id) => async (setState) => {
   try {
     await api.deletePost(id);
 
-    setState(
-      (posts) => {
-        return posts.filter((post) => post._id !== id);
-      },
-      ["posts"]
-    );
+    setState((posts) => {
+      return posts.filter((post) => post._id !== id);
+    }, "posts");
   } catch (error) {
     console.log(error.message);
   }

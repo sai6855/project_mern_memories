@@ -2,10 +2,11 @@ import React from "react";
 import { Grid, CircularProgress } from "@material-ui/core";
 import Post from "./Post/Post";
 import useStyles from "./styles";
-import { useSelector } from "react-manage-state";
+import useContext from "../../Store/useContext";
 
 const Posts = ({ setCurrentId }) => {
-  const posts = useSelector(["posts"]);
+  const { getState } = useContext();
+  const posts = getState("posts");
   const classes = useStyles();
 
   return !posts.length ? (

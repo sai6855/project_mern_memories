@@ -4,7 +4,7 @@ import FileBase from "react-file-base64";
 
 import useStyles from "./styles";
 import { createPost, updatePost } from "../../actions/posts";
-import { useSelector, useSetState } from "react-manage-state";
+import useContext from "../../Store/useContext";
 
 const Form = ({ setCurrentId }) => {
   const [postData, setPostData] = useState({
@@ -15,13 +15,14 @@ const Form = ({ setCurrentId }) => {
     selectedFile: "",
   });
 
-  const posts = useSelector(["posts"]);
-  const currentId = useSelector(["currentId"]);
+  const { getState, setState } = useContext();
+
+  const posts = getState("posts");
+  const currentId = getState("currentId");
 
   const post = currentId
     ? posts.find((message) => message._id === currentId)
     : null;
-  const setState = useSetState();
   const classes = useStyles();
 
   useEffect(() => {

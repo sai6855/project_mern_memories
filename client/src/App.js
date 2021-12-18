@@ -5,18 +5,18 @@ import Form from "./components/Form/Form";
 import { getPosts } from "./actions/posts";
 import useStyles from "./styles";
 import memories from "./images/memories.png";
-import { useSelector, useSetState } from "react-manage-state";
+import useContext from "./Store/useContext";
 
 const App = () => {
-  const setState = useSetState();
-  const currentId = useSelector(["currentId"]);
-  const store = useSelector();
-  console.log({ store });
-  const setCurrentId = (id) => setState(id, ["currentId"]);
+  const { getState, setState } = useContext();
+
+  const currentId = getState("currentId");
+
+  const setCurrentId = (id) => setState(id, "currentId");
   const classes = useStyles();
 
   useEffect(() => {
-    setState(() => getPosts(), ["posts"]);
+    setState(() => getPosts(), "posts");
   }, [currentId, setState]);
 
   return (

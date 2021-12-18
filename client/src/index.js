@@ -1,19 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import { StoreProvider } from "react-manage-state";
-
 import App from "./App";
 import "./index.css";
-
-const state = {
-  posts: [],
-  currentId: 0,
-};
+import Provider from "./Store/Context";
 
 ReactDOM.render(
-  <StoreProvider store={state}>
+  <Provider>
     <App />
-  </StoreProvider>,
+  </Provider>,
   document.getElementById("root")
 );

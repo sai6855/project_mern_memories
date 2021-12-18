@@ -14,11 +14,11 @@ import moment from "moment";
 
 import { likePost, deletePost } from "../../../actions/posts";
 import useStyles from "./styles";
-import { useSetState } from "react-manage-state";
+import useContext from "../../../Store/useContext";
 
 const Post = ({ post, setCurrentId }) => {
   const classes = useStyles();
-  const setState = useSetState();
+  const { setState } = useContext();
 
   return (
     <Card className={classes.card}>
