@@ -15,7 +15,7 @@ const App = () => {
   const setCurrentId = (id) => setState(id, "store.currentId");
 
   const { getPosts } = useApi();
-
+  console.log(state);
   useEffect(() => {
     getPosts();
   }, [state.store.posts.length, getPosts]);

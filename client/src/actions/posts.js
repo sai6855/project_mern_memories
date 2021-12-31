@@ -7,7 +7,7 @@ const useApi = () => {
 
   const getPosts = useCallback(async () => {
     try {
-      const { data } = await api.fetchPosts();
+      const data = await api.fetchPosts();
 
       setState(() => data, "store.posts");
     } catch (error) {
@@ -17,7 +17,7 @@ const useApi = () => {
 
   const createPost = async (post) => {
     try {
-      const { data } = await api.createPost(post);
+      const data = await api.createPost(post);
       setState((posts) => {
         return [...posts, data];
       }, "store.posts");
@@ -28,7 +28,7 @@ const useApi = () => {
 
   const updatePost = async (id, newpost) => {
     try {
-      const { data } = await api.updatePost(id, newpost);
+      const data = await api.updatePost(id, newpost);
 
       setState(
         (store) => ({
@@ -48,7 +48,7 @@ const useApi = () => {
   const likePost = async (id) => {
     console.log(`Like ${id}`);
     try {
-      const { data } = await api.likePost(id);
+      const data = await api.likePost(id);
 
       setState(
         (posts) => posts.map((post) => (post._id === id ? data : post)),
