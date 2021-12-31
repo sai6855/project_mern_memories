@@ -5,8 +5,8 @@ import useStyles from "./styles";
 import useContext from "../../Store/useContext";
 
 const Posts = ({ setCurrentId }) => {
-  const { getState } = useContext();
-  const posts = getState("posts");
+  const { state } = useContext();
+  const posts = state.store.posts;
   const classes = useStyles();
 
   return !posts.length ? (

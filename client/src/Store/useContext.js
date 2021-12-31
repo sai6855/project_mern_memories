@@ -2,9 +2,9 @@ import React from "react";
 import { Context } from "./Context";
 
 const useContext = () => {
-  const { state, getState, setState } = React.useContext(Context);
+  const { state, setState } = React.useContext(Context);
 
-  return { state, getState, setState };
+  return { state, setState };
 };
 
 export default useContext;

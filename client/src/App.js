@@ -2,22 +2,23 @@ import React, { useEffect } from "react";
 import { Container, AppBar, Typography, Grow, Grid } from "@material-ui/core";
 import Posts from "./components/Posts/Posts";
 import Form from "./components/Form/Form";
-import { getPosts } from "./actions/posts";
 import useStyles from "./styles";
 import memories from "./images/memories.png";
 import useContext from "./Store/useContext";
+import useApi from "./actions/posts";
 
 const App = () => {
-  const { getState, setState } = useContext();
-
-  const currentId = getState("currentId");
-
-  const setCurrentId = (id) => setState(id, "currentId");
   const classes = useStyles();
 
+  const { state, setState } = useContext();
+
+  const setCurrentId = (id) => setState(id, "store.currentId");
+
+  const { getPosts } = useApi();
+
   useEffect(() => {
-    setState(() => getPosts(), "posts");
-  }, [currentId, setState]);
+    getPosts();
+  }, [state.store.posts.length, getPosts]);
 
   return (
     <Container maxWidth="lg">

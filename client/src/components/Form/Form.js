@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { TextField, Button, Typography, Paper } from "@material-ui/core";
-import FileBase from "react-file-base64";
+//import FileBase from "react-file-base64";
 
 import useStyles from "./styles";
-import { createPost, updatePost } from "../../actions/posts";
+import useApi from "../../actions/posts";
 import useContext from "../../Store/useContext";
 
 const Form = ({ setCurrentId }) => {
@@ -15,19 +15,28 @@ const Form = ({ setCurrentId }) => {
     selectedFile: "",
   });
 
-  const { getState, setState } = useContext();
+  const { state } = useContext();
 
-  const posts = getState("posts");
-  const currentId = getState("currentId");
+  const { createPost, updatePost } = useApi();
 
-  const post = currentId
-    ? posts.find((message) => message._id === currentId)
-    : null;
+  const posts = state.store.posts;
+  const currentId = state.store.currentId;
+
   const classes = useStyles();
 
   useEffect(() => {
-    if (post) setPostData(post);
-  }, [post]);
+    setPostData(
+      currentId
+        ? posts.find((message) => message._id === currentId)
+        : {
+            creator: "",
+            title: "",
+            message: "",
+            tags: "",
+            selectedFile: "",
+          }
+    );
+  }, [currentId, posts]);
 
   const clear = () => {
     setCurrentId(0);
@@ -44,11 +53,10 @@ const Form = ({ setCurrentId }) => {
     e.preventDefault();
 
     if (currentId === 0) {
-      setState(() => createPost(postData));
+      createPost(postData);
       clear();
     } else {
-      setState(() => updatePost(currentId, postData));
-      clear();
+      updatePost(currentId, postData);
     }
   };
 
@@ -61,7 +69,7 @@ const Form = ({ setCurrentId }) => {
         onSubmit={handleSubmit}
       >
         <Typography variant="h6">
-          {currentId ? `Editing "${post.title}"` : "Creating a Memory"}
+          {currentId ? `Editing "${postData.title}"` : "Creating a Memory"}
         </Typography>
         <TextField
           name="creator"
@@ -104,13 +112,13 @@ const Form = ({ setCurrentId }) => {
           }
         />
         <div className={classes.fileInput}>
-          <FileBase
+          {/* <FileBase
             type="file"
             multiple={false}
             onDone={({ base64 }) =>
               setPostData({ ...postData, selectedFile: base64 })
             }
-          />
+          /> */}
         </div>
         <Button
           className={classes.buttonSubmit}

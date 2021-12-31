@@ -1,61 +1,81 @@
+import { useCallback, useContext } from "react";
 import * as api from "../api/index.js";
+import { Context } from "../Store/Context.js";
 
-export const getPosts = () => async (setState) => {
-  try {
-    const { data } = await api.fetchPosts();
+const useApi = () => {
+  const { setState } = useContext(Context);
 
-    setState(() => data, "posts");
-  } catch (error) {
-    console.log(error.message);
-  }
+  const getPosts = useCallback(async () => {
+    try {
+      const { data } = await api.fetchPosts();
+
+      setState(() => data, "store.posts");
+    } catch (error) {
+      console.log(error.message);
+    }
+  }, [setState]);
+
+  const createPost = async (post) => {
+    try {
+      const { data } = await api.createPost(post);
+      setState((posts) => {
+        return [...posts, data];
+      }, "store.posts");
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const updatePost = async (id, newpost) => {
+    try {
+      const { data } = await api.updatePost(id, newpost);
+
+      setState(
+        (store) => ({
+          ...store,
+          posts: store.posts.map((post) =>
+            post._id === id ? { ...data, ...newpost } : post
+          ),
+          currentId: 0,
+        }),
+        "store"
+      );
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const likePost = async (id) => {
+    console.log(`Like ${id}`);
+    try {
+      const { data } = await api.likePost(id);
+
+      setState(
+        (posts) => posts.map((post) => (post._id === id ? data : post)),
+        "store.posts"
+      );
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const deletePost = async (id) => {
+    try {
+      await api.deletePost(id);
+
+      setState((state) => {
+        return {
+          ...state,
+          currentId: 0,
+          posts: state.posts.filter((post) => post._id !== id),
+        };
+      }, "store");
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  return { deletePost, getPosts, updatePost, createPost, likePost };
 };
 
-export const createPost = (post) => async (setState) => {
-  try {
-    const { data } = await api.createPost(post);
-    setState((posts) => {
-      return [...posts, data];
-    }, "posts");
-  } catch (error) {
-    console.log(error.message);
-  }
-};
-
-export const updatePost = (id, newpost) => async (setState) => {
-  try {
-    const { data } = await api.updatePost(id, newpost);
-
-    setState(
-      (posts) =>
-        posts.map((post) => (post._id === id ? { ...data, ...newpost } : post)),
-      "posts"
-    );
-  } catch (error) {
-    console.log(error.message);
-  }
-};
-
-export const likePost = (id) => async (setState) => {
-  try {
-    const { data } = await api.likePost(id);
-
-    setState(
-      (posts) => posts.map((post) => (post._id === id ? data : post)),
-      "posts"
-    );
-  } catch (error) {
-    console.log(error.message);
-  }
-};
-
-export const deletePost = (id) => async (setState) => {
-  try {
-    await api.deletePost(id);
-
-    setState((posts) => {
-      return posts.filter((post) => post._id !== id);
-    }, "posts");
-  } catch (error) {
-    console.log(error.message);
-  }
-};
+export default useApi;
