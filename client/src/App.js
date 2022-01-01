@@ -10,15 +10,15 @@ import useApi from "./actions/posts";
 const App = () => {
   const classes = useStyles();
 
-  const { state, setState } = useContext();
+  const { setState } = useContext();
 
   const setCurrentId = (id) => setState(id, "store.currentId");
 
   const { getPosts } = useApi();
-  console.log(state);
+  //console.log(state);
   useEffect(() => {
     getPosts();
-  }, [state.store.posts.length, getPosts]);
+  }, [getPosts]);
 
   return (
     <Container maxWidth="lg">

@@ -18,6 +18,7 @@ const useApi = () => {
   const createPost = async (post) => {
     try {
       const data = await api.createPost(post);
+      console.log("create post");
       setState((posts) => {
         return [...posts, data];
       }, "store.posts");
@@ -29,7 +30,7 @@ const useApi = () => {
   const updatePost = async (id, newpost) => {
     try {
       const data = await api.updatePost(id, newpost);
-
+      console.log("update post");
       setState(
         (store) => ({
           ...store,
@@ -46,7 +47,7 @@ const useApi = () => {
   };
 
   const likePost = async (id) => {
-    console.log(`Like ${id}`);
+    console.log("like post");
     try {
       const data = await api.likePost(id);
 
@@ -60,6 +61,7 @@ const useApi = () => {
   };
 
   const deletePost = async (id) => {
+    console.log("delete post");
     try {
       await api.deletePost(id);
 
